@@ -11,5 +11,12 @@ class Game:
                 pg.display.flip()
                 self.screen.fill((0,0,0))
 
+class Apple:
+    def __init__(self,game,x,y):
+        self.x = x
+        self.y = y
+        self.game = game
+        pg.draw.rect(self.game.screen,(255,0,0),pg.Rect(x,y,10,10))
+
 if __name__ == '__main__':
     game = Game(720,480)
