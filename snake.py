@@ -11,7 +11,7 @@ class Game:
         self.clock = pg.time.Clock()
 
         snake = Snake_Head(self,100,100,10,0)
-        apple = Apple(self,rd.randrange(0,width,10),rd.randrange(0,height,10))
+        apple = Apple(self,rd.randrange(0,width,10),rd.randrange(0,height,10),snake)
         
         self.snake_body.append(Snake_Body(self,snake.x-10,snake.y))
         while True:
@@ -51,8 +51,6 @@ class Game:
             for part in self.snake_body:
                 part.draw()
                 
-
-
 class Snake_Head:
     def __init__(self,game,x,y,vel_x,vel_y):
         self.x = x
@@ -87,6 +85,26 @@ class Snake_Head:
         else:
             self.y += self.vel_y
 
+class Apple(Snake_Head):
+    def __init__(self,game,x,y,snake):
+        self.snake = snake
+        self.x = x
+        self.y = y
+        self.game = game
+    
+    def draw(self):
+        pg.draw.rect(self.game.screen,(255,0,0),pg.Rect(self.x,self.y,10,10))
+    
+    def checkCollision(self,game):
+        if (self.snake.x < self.x + self.size and
+                self.snake.x > self.x - self.size and
+                self.snake.y < self.y + self.size and
+                self.snake.y > self.y - self.size):
+            
+            game.snake_body.append(Snake_Body(game,game.snake_body[len(game.snake_body)-1].x-game.snake.vel_x,game.snake_body[len(game.snake_body)-1].y-game.snake.vel_y))
+            self.x = rd.randrange(0,game.width,10)
+            self.y = rd.randrange(0,game.height,10)
+
 class Snake_Body:
     def __init__(self,game,x,y):
         self.x = x
@@ -100,26 +118,6 @@ class Snake_Body:
     def update(self,x,y):
         self.x = x
         self.y = y
-
-
-class Apple:
-    def __init__(self,game,x,y):
-        self.x = x
-        self.y = y
-        self.game = game
-    
-    def draw(self):
-        pg.draw.rect(self.game.screen,(255,0,0),pg.Rect(self.x,self.y,10,10))
-    
-    def checkCollision(self,game):
-        if (game.snake.x < self.x + self.size and
-                game.snake.x > self.x - self.size and
-                game.snake.y < self.y + self.size and
-                game.snake.y > self.y - self.size):
-            
-            game.snake_body.append(Snake_Body(game,game.snake_body[len(game.snake_body)-1].x-game.snake.vel_x,game.snake_body[len(game.snake_body)-1].y-game.snake.vel_y))
-            self.x = rd.randrange(0,game.width,10)
-            self.y = rd.randrange(0,game.height,10)
 
 if __name__ == '__main__':
     game = Game(720,480)
