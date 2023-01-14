@@ -26,17 +26,19 @@ class Game:
                 if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
                     snake_body.append(Snake_Body(self,snake_body[len(snake_body)-1].x-snake.vel_x,snake_body[len(snake_body)-1].y-snake.vel_y))
 
-            snake.update()
-            for i in range(0,len(snake_body)):
-                if i == 0:
-                    snake_body[0].update(snake.x+snake.vel_x, snake.y+snake.vel_y)
-                else:
-                    snake_body[i].update(snake_body[i-1].x+snake.vel_x, snake_body[i-1].y+snake.vel_y4)
 
+            for i in range(len(snake_body)-1,-1,-1):
+                if i == 0:
+                    snake_body[0].update(snake.x, snake.y)
+                else:
+                    snake_body[i].update(snake_body[i-1].x, snake_body[i-1].y)
+            snake.update()
 
             pg.display.flip()
             self.clock.tick(10)
             self.screen.fill((0,0,0))
+
+            snake.checkCollision(self)
 
             snake.draw()
             for part in snake_body:
@@ -56,6 +58,14 @@ class Snake_Head:
     def draw(self):
         pg.draw.rect(self.game.screen,(0,255,0),pg.Rect(self.x,self.y,self.size,self.size))
     
+    def checkCollision(self,game):
+        for part in game.snake_body:
+            if (part.x < self.x + self.size and
+                    part.x > self.x - self.size and
+                    part.y < self.y + self.size and
+                    part.y > self.y - self.size):
+                quit()
+
     def update(self):
         self.x += self.vel_x
         self.y += self.vel_y
