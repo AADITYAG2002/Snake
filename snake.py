@@ -74,13 +74,13 @@ class Snake_Head:
     def update(self):
         if self.x > self.game.width:
             self.x = 0
-        elif self.x <0:
+        elif self.x < 0:
             self.x = self.game.width
         else:
             self.x += self.vel_x
         if self.y > self.game.height:
             self.y = 0
-        elif self.y <0:
+        elif self.y < 0:
             self.y = self.game.height
         else:
             self.y += self.vel_y
@@ -96,12 +96,12 @@ class Apple(Snake_Head):
         pg.draw.rect(self.game.screen,(255,0,0),pg.Rect(self.x,self.y,10,10))
     
     def checkCollision(self,game):
-        if (self.snake.x < self.x + self.size and
-                self.snake.x > self.x - self.size and
-                self.snake.y < self.y + self.size and
-                self.snake.y > self.y - self.size):
+        if (self.snake.x < self.x + self.snake.size and
+                self.snake.x > self.x - self.snake.size and
+                self.snake.y < self.y + self.snake.size and
+                self.snake.y > self.y - self.snake.size):
             
-            game.snake_body.append(Snake_Body(game,game.snake_body[len(game.snake_body)-1].x-game.snake.vel_x,game.snake_body[len(game.snake_body)-1].y-game.snake.vel_y))
+            game.snake_body.append(Snake_Body(game,game.snake_body[len(game.snake_body)-1].x-self.snake.vel_x,game.snake_body[len(game.snake_body)-1].y-self.snake.vel_y))
             self.x = rd.randrange(0,game.width,10)
             self.y = rd.randrange(0,game.height,10)
 
