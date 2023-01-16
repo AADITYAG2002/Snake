@@ -1,8 +1,11 @@
 import pygame as pg
 import random as rd
 
+
 class Game:
     snake_body = []
+    score = 0
+    tick_rate = 10
     def __init__(self, width, height) :
         self.width = width
         self.height = height
@@ -27,10 +30,7 @@ class Game:
 
             for event in pg.event.get():
                 if event.type == pg.QUIT: 
-                    quit()
-                # if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
-                    
-
+                    quit()                  
 
             for i in range(len(self.snake_body)-1,-1,-1):
                 if i == 0:
@@ -40,17 +40,23 @@ class Game:
             snake.update()
 
             pg.display.flip()
-            self.clock.tick(10)
+            self.clock.tick(self.tick_rate)
             self.screen.fill((0,0,0))
 
             snake.checkCollision(self)
             apple.checkCollision(self)
             
+            self.Score(self.score)
             snake.draw()
             apple.draw()
             for part in self.snake_body:
                 part.draw()
-                
+
+    def Score(self,score):
+        font=pg.font.SysFont(None,40)
+        scoretext=font.render(str(score), 1,(255,255,255,10))
+        self.screen.blit(scoretext, (self.width/2, self.height/2))
+            
 class Snake_Head:
     def __init__(self,game,x,y,vel_x,vel_y):
         self.x = x
@@ -101,6 +107,8 @@ class Apple(Snake_Head):
                 self.snake.y < self.y + self.snake.size and
                 self.snake.y > self.y - self.snake.size):
             
+            game.tick_rate += 0.1
+            game.score += 1
             game.snake_body.append(Snake_Body(game,game.snake_body[len(game.snake_body)-1].x-self.snake.vel_x,game.snake_body[len(game.snake_body)-1].y-self.snake.vel_y))
             self.x = rd.randrange(0,game.width,10)
             self.y = rd.randrange(0,game.height,10)
